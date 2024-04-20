@@ -20,6 +20,7 @@ namespace DrawingObject.UserDrawing
 
         //--
         int objIdx = -1;
+        int shapeIdx = -1;
         ObjectsManager objMgr = null;
         userObject sel_Object = null;
 
@@ -121,6 +122,10 @@ namespace DrawingObject.UserDrawing
             objIdx = cbObjList.SelectedIndex;
             objMgr.Get_User_Object(objIdx).Draw_Object();
         }
+        private void cbShapeIndex_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            shapeIdx = cbShapeIndex.SelectedIndex;
+        }
 
         private void btnAddShape_Click(object sender, EventArgs e)
         {
@@ -143,11 +148,19 @@ namespace DrawingObject.UserDrawing
             sel_Object.Add_Shape(shapeType, shapeRegion, lineThick, lineColor, bFillShape, fillColor);
             sel_Object.Draw_Object();
             sel_Object.Edit_Mode = true;
+
+            //--
+            shapeIdx = sel_Object.ShapeCount - 1;
+            cbShapeIndex.Items.Add("Shape Idx: " + sel_Object.ShapeCount.ToString());
+            cbShapeIndex.SelectedIndex = shapeIdx;
         }
         private void btnDeleteShape_Click(object sender, EventArgs e)
         {
             if (objIdx < 0) return;
+            if (sel_Object.ShapeCount < 0) return;
+
             objMgr.Get_User_Object(objIdx).Delete_LastShape();
+            cbShapeIndex.Items.RemoveAt(sel_Object.ShapeCount - 1);
         }
 
         private void btnComplete_Click(object sender, EventArgs e)
@@ -185,6 +198,20 @@ namespace DrawingObject.UserDrawing
         {
             if (objIdx < 0) return;
             objMgr.Get_User_Object(objIdx).Move_Object_Org_Pos();
+        }
+
+        private void ShapeJogMove_Click(object sender, EventArgs e)
+        {
+            if (objIdx < 0) return;
+            if (shapeIdx < 0) return;
+
+            int offX = 0, offY = 0;
+            if (sender == btnShapeLft) offX = -1;
+            else if (sender == btnShapeRgt) offX = 1;
+            else if (sender == btnShapeUp) offY = -1;
+            else if (sender == btnShapeDown) offY = 1;
+
+            objMgr.Get_User_Object(objIdx).MoveShape_EditMode(shapeIdx, offX, offY);
         }
     }
 }

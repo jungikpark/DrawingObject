@@ -41,6 +41,10 @@
             this.rdoObjEllipse = new System.Windows.Forms.RadioButton();
             this.rdoObjRect = new System.Windows.Forms.RadioButton();
             this.grpProperty = new System.Windows.Forms.GroupBox();
+            this.cbLineColor = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtLineThick = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.cbColor = new System.Windows.Forms.ComboBox();
             this.rdoEmpy = new System.Windows.Forms.RadioButton();
             this.rdoFill = new System.Windows.Forms.RadioButton();
@@ -49,15 +53,17 @@
             this.btnNewObj = new System.Windows.Forms.Button();
             this.cbObjList = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtLineThick = new System.Windows.Forms.TextBox();
-            this.cbLineColor = new System.Windows.Forms.ComboBox();
             this.btnComplete = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.btnTestObjMove = new System.Windows.Forms.Button();
             this.tmrObjMove = new System.Windows.Forms.Timer(this.components);
             this.btnObjOrgPos = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.cbShapeIndex = new System.Windows.Forms.ComboBox();
+            this.btnShapeLft = new System.Windows.Forms.Button();
+            this.btnShapeDown = new System.Windows.Forms.Button();
+            this.btnShapeRgt = new System.Windows.Forms.Button();
+            this.btnShapeUp = new System.Windows.Forms.Button();
             this.grpObjectSize.SuspendLayout();
             this.grbObjectTypes.SuspendLayout();
             this.grpProperty.SuspendLayout();
@@ -213,6 +219,45 @@
             this.grpProperty.TabStop = false;
             this.grpProperty.Text = "Shape Property";
             // 
+            // cbLineColor
+            // 
+            this.cbLineColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cbLineColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbLineColor.FormattingEnabled = true;
+            this.cbLineColor.Location = new System.Drawing.Point(17, 46);
+            this.cbLineColor.Name = "cbLineColor";
+            this.cbLineColor.Size = new System.Drawing.Size(171, 22);
+            this.cbLineColor.TabIndex = 14;
+            this.cbLineColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbColor_DrawItem);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(16, 24);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(66, 15);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Line Thick.";
+            // 
+            // txtLineThick
+            // 
+            this.txtLineThick.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtLineThick.Location = new System.Drawing.Point(101, 20);
+            this.txtLineThick.Name = "txtLineThick";
+            this.txtLineThick.Size = new System.Drawing.Size(85, 22);
+            this.txtLineThick.TabIndex = 12;
+            this.txtLineThick.Text = "1";
+            this.txtLineThick.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(16, 79);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(40, 15);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Brush";
+            // 
             // cbColor
             // 
             this.cbColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
@@ -306,45 +351,6 @@
             this.label3.TabIndex = 10;
             this.label3.Text = "Objects List";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 79);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(40, 15);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "Brush";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 24);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(66, 15);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "Line Thick.";
-            // 
-            // txtLineThick
-            // 
-            this.txtLineThick.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtLineThick.Location = new System.Drawing.Point(101, 20);
-            this.txtLineThick.Name = "txtLineThick";
-            this.txtLineThick.Size = new System.Drawing.Size(85, 22);
-            this.txtLineThick.TabIndex = 12;
-            this.txtLineThick.Text = "1";
-            this.txtLineThick.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // cbLineColor
-            // 
-            this.cbLineColor.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cbLineColor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbLineColor.FormattingEnabled = true;
-            this.cbLineColor.Location = new System.Drawing.Point(17, 46);
-            this.cbLineColor.Name = "cbLineColor";
-            this.cbLineColor.Size = new System.Drawing.Size(171, 22);
-            this.cbLineColor.TabIndex = 14;
-            this.cbLineColor.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbColor_DrawItem);
-            // 
             // btnComplete
             // 
             this.btnComplete.Location = new System.Drawing.Point(317, 525);
@@ -388,12 +394,77 @@
             this.btnObjOrgPos.UseVisualStyleBackColor = true;
             this.btnObjOrgPos.Click += new System.EventHandler(this.btnObjOrgPos_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(135, 622);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(82, 15);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "Shape Inedex";
+            // 
+            // cbShapeIndex
+            // 
+            this.cbShapeIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbShapeIndex.FormattingEnabled = true;
+            this.cbShapeIndex.Location = new System.Drawing.Point(133, 640);
+            this.cbShapeIndex.Name = "cbShapeIndex";
+            this.cbShapeIndex.Size = new System.Drawing.Size(109, 23);
+            this.cbShapeIndex.TabIndex = 15;
+            this.cbShapeIndex.SelectedIndexChanged += new System.EventHandler(this.cbShapeIndex_SelectedIndexChanged);
+            // 
+            // btnShapeLft
+            // 
+            this.btnShapeLft.Location = new System.Drawing.Point(251, 637);
+            this.btnShapeLft.Name = "btnShapeLft";
+            this.btnShapeLft.Size = new System.Drawing.Size(53, 29);
+            this.btnShapeLft.TabIndex = 17;
+            this.btnShapeLft.Text = "Lft";
+            this.btnShapeLft.UseVisualStyleBackColor = true;
+            this.btnShapeLft.Click += new System.EventHandler(this.ShapeJogMove_Click);
+            // 
+            // btnShapeDown
+            // 
+            this.btnShapeDown.Location = new System.Drawing.Point(305, 637);
+            this.btnShapeDown.Name = "btnShapeDown";
+            this.btnShapeDown.Size = new System.Drawing.Size(53, 29);
+            this.btnShapeDown.TabIndex = 18;
+            this.btnShapeDown.Text = "Dwn";
+            this.btnShapeDown.UseVisualStyleBackColor = true;
+            this.btnShapeDown.Click += new System.EventHandler(this.ShapeJogMove_Click);
+            // 
+            // btnShapeRgt
+            // 
+            this.btnShapeRgt.Location = new System.Drawing.Point(359, 637);
+            this.btnShapeRgt.Name = "btnShapeRgt";
+            this.btnShapeRgt.Size = new System.Drawing.Size(53, 29);
+            this.btnShapeRgt.TabIndex = 19;
+            this.btnShapeRgt.Text = "Rgt";
+            this.btnShapeRgt.UseVisualStyleBackColor = true;
+            this.btnShapeRgt.Click += new System.EventHandler(this.ShapeJogMove_Click);
+            // 
+            // btnShapeUp
+            // 
+            this.btnShapeUp.Location = new System.Drawing.Point(306, 605);
+            this.btnShapeUp.Name = "btnShapeUp";
+            this.btnShapeUp.Size = new System.Drawing.Size(53, 29);
+            this.btnShapeUp.TabIndex = 20;
+            this.btnShapeUp.Text = "Up";
+            this.btnShapeUp.UseVisualStyleBackColor = true;
+            this.btnShapeUp.Click += new System.EventHandler(this.ShapeJogMove_Click);
+            // 
             // ObjectsSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(858, 678);
+            this.Controls.Add(this.btnShapeUp);
+            this.Controls.Add(this.btnShapeRgt);
+            this.Controls.Add(this.btnShapeDown);
+            this.Controls.Add(this.btnShapeLft);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.cbShapeIndex);
             this.Controls.Add(this.btnObjOrgPos);
             this.Controls.Add(this.btnTestObjMove);
             this.Controls.Add(this.label6);
@@ -455,5 +526,11 @@
         private System.Windows.Forms.Button btnTestObjMove;
         private System.Windows.Forms.Timer tmrObjMove;
         private System.Windows.Forms.Button btnObjOrgPos;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox cbShapeIndex;
+        private System.Windows.Forms.Button btnShapeLft;
+        private System.Windows.Forms.Button btnShapeDown;
+        private System.Windows.Forms.Button btnShapeRgt;
+        private System.Windows.Forms.Button btnShapeUp;
     }
 }

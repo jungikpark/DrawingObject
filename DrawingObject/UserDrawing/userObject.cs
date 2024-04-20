@@ -152,6 +152,7 @@ namespace DrawingObject.UserDrawing
         private Point DownPoint = new Point();
         private bool bEditMode = false;
         private int EditShapeIdx = -1;
+        private string strEditRegion = string.Empty;
         private Rectangle oldDrwRegion = new Rectangle();
         private Rectangle EditRegion = new Rectangle();
         private ShapeRegionEdit EditMode = ShapeRegionEdit.Mode_None;
@@ -159,10 +160,19 @@ namespace DrawingObject.UserDrawing
         private Graphics gp = null;
         private List<objShape> shapeList = new List<objShape>();
 
+        //-- double buffer
+        private Bitmap Buffer = null;
+        private Graphics buffGp = null;
+
         public void Set_DrawingPanel(Panel drwCanvas)
         {
             this.drwCanvas = drwCanvas;
             gp = drwCanvas.CreateGraphics();
+
+            //-- double buffer
+            if (Buffer != null) Buffer.Dispose();
+            Buffer = new Bitmap(drwCanvas.Size.Width, drwCanvas.Size.Height);
+            buffGp = Graphics.FromImage(Buffer);
 
             //-- Event
             drwCanvas.Paint += Object_Paint;
@@ -206,11 +216,80 @@ namespace DrawingObject.UserDrawing
             shapeList[shapeIdx].ShapeColor = shapeColor;
             Draw_Object(true);
         }
+        public int ShapeCount => shapeList.Count;
+
         public void Move_Shape(int shapeIdx, int offX, int offY)
         {
             if (shapeIdx < 0) return;
             if (shapeIdx >= shapeList.Count) return;
+
+            Rectangle shapeRegion = new Rectangle();
+            shapeRegion.X = shapeList[shapeIdx].ShapeOrgRegion.X + offX;
+            shapeRegion.Y = shapeList[shapeIdx].ShapeOrgRegion.Y + offY;
+            shapeRegion.Width = shapeList[shapeIdx].ShapeOrgRegion.Width;
+            shapeRegion.Height = shapeList[shapeIdx].ShapeOrgRegion.Height;
+            shapeList[shapeIdx].ShapeRegion = shapeRegion;
+
+            //-- Draw
+            Draw_Object(true);
         }
+        public void Move_Shapes(int[] shapesIdx, int offX, int offY)
+        {
+            if (shapesIdx == null) return;
+            if (shapesIdx.Length <= 0) return;
+
+            Rectangle shapeRegion = new Rectangle();
+            for (int i=0; i< shapesIdx.Length; i++)
+            {
+                int idx = shapesIdx[i];
+                shapeRegion.X = shapeList[idx].ShapeOrgRegion.X + offX;
+                shapeRegion.Y = shapeList[idx].ShapeOrgRegion.Y + offY;
+                shapeRegion.Width = shapeList[idx].ShapeOrgRegion.Width;
+                shapeRegion.Height = shapeList[idx].ShapeOrgRegion.Height;
+                shapeList[idx].ShapeRegion = shapeRegion;
+            }
+
+            //-- Draw
+            Draw_Object(true);
+        }
+        public void Move_Shape_Org_Pos(int shapeIdx)
+        {
+            if (shapeIdx < 0) return;
+            if (shapeIdx >= shapeList.Count) return;
+
+            shapeList[shapeIdx].ShapeRegion = shapeList[shapeIdx].ShapeOrgRegion;
+            Draw_Object(true);
+        }
+        public void Move_Shapes_Org_Pos(int[] shapesIdx)
+        {
+            if (shapesIdx == null) return;
+            if (shapesIdx.Length <= 0) return;
+
+            for (int i = 0; i < shapesIdx.Length; i++)
+            {
+                int idx = shapesIdx[i];
+                shapeList[idx].ShapeRegion = shapeList[idx].ShapeOrgRegion;
+            }
+
+            Draw_Object(true);
+        }
+        public void MoveShape_EditMode(int shapeIdx, int offX, int offY)
+        {
+            if (shapeIdx < 0) return;
+            if (shapeIdx >= shapeList.Count) return;
+
+            Rectangle editRegion = new Rectangle();
+            editRegion = shapeList[shapeIdx].ShapeRegion;
+            editRegion.X += offX;
+            editRegion.Y += offY;
+
+            //--
+            Draw_MoveRect(shapeList[shapeIdx].ShapeRegion, editRegion, Color.Black);
+            shapeList[shapeIdx].ShapeRegion = editRegion;
+            shapeList[shapeIdx].ShapeOrgRegion = editRegion;
+            Draw_Object(true);
+        }
+
         public void Move_Object(int offX, int offY)
         {
             //-- 모든 Shape에 Offset 적용
@@ -245,38 +324,32 @@ namespace DrawingObject.UserDrawing
             if (drwCanvas == null) return;
 
             //--
-            if (bClear) gp.Clear(drwCanvas.BackColor);
+            if (bClear) buffGp.Clear(drwCanvas.BackColor);
 
             //--
             foreach (var shape in shapeList)
             {
-                shape.DrawShape(gp);
+                shape.DrawShape(buffGp);
             }
+
+            gp.DrawImage(Buffer, 0, 0);
         }
         
-        private void Erase_Shape_Region(Rectangle shapeRegion, bool bFill)
-        {
-            //-- 위치 지우기
-            if(bFill == true)
-            {
-                Brush drwBrush = new SolidBrush(drwCanvas.BackColor);
-                gp.FillRectangle(drwBrush, shapeRegion.X, shapeRegion.Y, shapeRegion.Width, shapeRegion.Height);
-            }
-            else
-            {
-                Pen trsPen = new Pen(drwCanvas.BackColor, 1);
-                gp.DrawRectangle(trsPen, shapeRegion.X, shapeRegion.Y, shapeRegion.Width, shapeRegion.Height);
-            }
-        }
         private void Draw_MoveRect(Rectangle oldRegion, Rectangle newRegion, Color lineColor)
         {
-            //-- 이전 위치 지우기
-            Pen trsPen = new Pen(drwCanvas.BackColor, 1);
-            gp.DrawRectangle(trsPen, oldRegion.X, oldRegion.Y, oldRegion.Width, oldRegion.Height);
+            //--
+            buffGp.Clear(drwCanvas.BackColor);
 
             //-- 새로운 위치 그리기
             Pen drwPen = new Pen(lineColor, 1);
-            gp.DrawRectangle(drwPen, newRegion.X, newRegion.Y, newRegion.Width, newRegion.Height);
+            buffGp.DrawRectangle(drwPen, newRegion.X, newRegion.Y, newRegion.Width, newRegion.Height);
+
+            //--
+            strEditRegion = string.Format("X: {0}, Y: {1}, W: {2}, H: {3}", newRegion.X, newRegion.Y, newRegion.Width, newRegion.Height);
+            buffGp.DrawString(strEditRegion, new Font("Arial", 10, FontStyle.Regular), Brushes.Black, 10, 10);
+
+            //--
+            gp.DrawImage(Buffer, 0, 0);
         }
         private void Object_Paint(object sender, PaintEventArgs e)
         {
