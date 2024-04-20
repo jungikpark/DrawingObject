@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.pnlCanvas = new System.Windows.Forms.Panel();
             this.rdoFixedSize = new System.Windows.Forms.RadioButton();
             this.rdoUserSize = new System.Windows.Forms.RadioButton();
@@ -56,7 +55,6 @@
             this.btnComplete = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.btnTestObjMove = new System.Windows.Forms.Button();
-            this.tmrObjMove = new System.Windows.Forms.Timer(this.components);
             this.btnObjOrgPos = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.cbShapeIndex = new System.Windows.Forms.ComboBox();
@@ -64,6 +62,13 @@
             this.btnShapeDown = new System.Windows.Forms.Button();
             this.btnShapeRgt = new System.Windows.Forms.Button();
             this.btnShapeUp = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtShapeIdx = new System.Windows.Forms.TextBox();
+            this.btnMoveShapes = new System.Windows.Forms.Button();
+            this.txtImageShapeFile = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.btnAddImageShape = new System.Windows.Forms.Button();
             this.grpObjectSize.SuspendLayout();
             this.grbObjectTypes.SuspendLayout();
             this.grpProperty.SuspendLayout();
@@ -304,7 +309,7 @@
             // 
             // btnAddShape
             // 
-            this.btnAddShape.Location = new System.Drawing.Point(129, 525);
+            this.btnAddShape.Location = new System.Drawing.Point(129, 503);
             this.btnAddShape.Name = "btnAddShape";
             this.btnAddShape.Size = new System.Drawing.Size(92, 50);
             this.btnAddShape.TabIndex = 6;
@@ -314,7 +319,7 @@
             // 
             // btnDeleteShape
             // 
-            this.btnDeleteShape.Location = new System.Drawing.Point(223, 525);
+            this.btnDeleteShape.Location = new System.Drawing.Point(223, 503);
             this.btnDeleteShape.Name = "btnDeleteShape";
             this.btnDeleteShape.Size = new System.Drawing.Size(92, 50);
             this.btnDeleteShape.TabIndex = 7;
@@ -324,7 +329,7 @@
             // 
             // btnNewObj
             // 
-            this.btnNewObj.Location = new System.Drawing.Point(12, 553);
+            this.btnNewObj.Location = new System.Drawing.Point(12, 531);
             this.btnNewObj.Name = "btnNewObj";
             this.btnNewObj.Size = new System.Drawing.Size(109, 22);
             this.btnNewObj.TabIndex = 8;
@@ -336,7 +341,7 @@
             // 
             this.cbObjList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbObjList.FormattingEnabled = true;
-            this.cbObjList.Location = new System.Drawing.Point(12, 525);
+            this.cbObjList.Location = new System.Drawing.Point(12, 503);
             this.cbObjList.Name = "cbObjList";
             this.cbObjList.Size = new System.Drawing.Size(109, 23);
             this.cbObjList.TabIndex = 9;
@@ -345,7 +350,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 507);
+            this.label3.Location = new System.Drawing.Point(14, 485);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(72, 15);
             this.label3.TabIndex = 10;
@@ -353,7 +358,7 @@
             // 
             // btnComplete
             // 
-            this.btnComplete.Location = new System.Drawing.Point(317, 525);
+            this.btnComplete.Location = new System.Drawing.Point(317, 503);
             this.btnComplete.Name = "btnComplete";
             this.btnComplete.Size = new System.Drawing.Size(92, 50);
             this.btnComplete.TabIndex = 11;
@@ -380,10 +385,6 @@
             this.btnTestObjMove.UseVisualStyleBackColor = true;
             this.btnTestObjMove.Click += new System.EventHandler(this.btnTestObjMove_Click);
             // 
-            // tmrObjMove
-            // 
-            this.tmrObjMove.Tick += new System.EventHandler(this.tmrObjMove_Tick);
-            // 
             // btnObjOrgPos
             // 
             this.btnObjOrgPos.Location = new System.Drawing.Point(503, 554);
@@ -397,7 +398,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(135, 622);
+            this.label7.Location = new System.Drawing.Point(14, 625);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(82, 15);
             this.label7.TabIndex = 16;
@@ -407,7 +408,7 @@
             // 
             this.cbShapeIndex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbShapeIndex.FormattingEnabled = true;
-            this.cbShapeIndex.Location = new System.Drawing.Point(133, 640);
+            this.cbShapeIndex.Location = new System.Drawing.Point(12, 643);
             this.cbShapeIndex.Name = "cbShapeIndex";
             this.cbShapeIndex.Size = new System.Drawing.Size(109, 23);
             this.cbShapeIndex.TabIndex = 15;
@@ -415,7 +416,7 @@
             // 
             // btnShapeLft
             // 
-            this.btnShapeLft.Location = new System.Drawing.Point(251, 637);
+            this.btnShapeLft.Location = new System.Drawing.Point(130, 640);
             this.btnShapeLft.Name = "btnShapeLft";
             this.btnShapeLft.Size = new System.Drawing.Size(53, 29);
             this.btnShapeLft.TabIndex = 17;
@@ -425,7 +426,7 @@
             // 
             // btnShapeDown
             // 
-            this.btnShapeDown.Location = new System.Drawing.Point(305, 637);
+            this.btnShapeDown.Location = new System.Drawing.Point(184, 640);
             this.btnShapeDown.Name = "btnShapeDown";
             this.btnShapeDown.Size = new System.Drawing.Size(53, 29);
             this.btnShapeDown.TabIndex = 18;
@@ -435,7 +436,7 @@
             // 
             // btnShapeRgt
             // 
-            this.btnShapeRgt.Location = new System.Drawing.Point(359, 637);
+            this.btnShapeRgt.Location = new System.Drawing.Point(238, 640);
             this.btnShapeRgt.Name = "btnShapeRgt";
             this.btnShapeRgt.Size = new System.Drawing.Size(53, 29);
             this.btnShapeRgt.TabIndex = 19;
@@ -445,7 +446,7 @@
             // 
             // btnShapeUp
             // 
-            this.btnShapeUp.Location = new System.Drawing.Point(306, 605);
+            this.btnShapeUp.Location = new System.Drawing.Point(185, 608);
             this.btnShapeUp.Name = "btnShapeUp";
             this.btnShapeUp.Size = new System.Drawing.Size(53, 29);
             this.btnShapeUp.TabIndex = 20;
@@ -453,12 +454,81 @@
             this.btnShapeUp.UseVisualStyleBackColor = true;
             this.btnShapeUp.Click += new System.EventHandler(this.ShapeJogMove_Click);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(611, 507);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(172, 15);
+            this.label8.TabIndex = 21;
+            this.label8.Text = "Shapes Move Test(ex. 0,2,3,..,)";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(611, 528);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(71, 15);
+            this.label9.TabIndex = 22;
+            this.label9.Text = "Shapes Idx:";
+            // 
+            // txtShapeIdx
+            // 
+            this.txtShapeIdx.Location = new System.Drawing.Point(685, 527);
+            this.txtShapeIdx.Name = "txtShapeIdx";
+            this.txtShapeIdx.Size = new System.Drawing.Size(162, 21);
+            this.txtShapeIdx.TabIndex = 23;
+            // 
+            // btnMoveShapes
+            // 
+            this.btnMoveShapes.Location = new System.Drawing.Point(756, 554);
+            this.btnMoveShapes.Name = "btnMoveShapes";
+            this.btnMoveShapes.Size = new System.Drawing.Size(92, 23);
+            this.btnMoveShapes.TabIndex = 24;
+            this.btnMoveShapes.Text = "Start";
+            this.btnMoveShapes.UseVisualStyleBackColor = true;
+            this.btnMoveShapes.Click += new System.EventHandler(this.btnMoveShapes_Click);
+            // 
+            // txtImageShapeFile
+            // 
+            this.txtImageShapeFile.Location = new System.Drawing.Point(129, 560);
+            this.txtImageShapeFile.Name = "txtImageShapeFile";
+            this.txtImageShapeFile.Size = new System.Drawing.Size(280, 21);
+            this.txtImageShapeFile.TabIndex = 25;
+            this.txtImageShapeFile.Text = "D:\\Source\\RnD\\Test\\Graphics\\Images\\omron_amrLD.jpg";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(15, 561);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(107, 15);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "Image Shape File:";
+            // 
+            // btnAddImageShape
+            // 
+            this.btnAddImageShape.Location = new System.Drawing.Point(293, 587);
+            this.btnAddImageShape.Name = "btnAddImageShape";
+            this.btnAddImageShape.Size = new System.Drawing.Size(116, 24);
+            this.btnAddImageShape.TabIndex = 27;
+            this.btnAddImageShape.Text = "Add Img. Shape";
+            this.btnAddImageShape.UseVisualStyleBackColor = true;
+            this.btnAddImageShape.Click += new System.EventHandler(this.btnAddImageShape_Click);
+            // 
             // ObjectsSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(858, 678);
+            this.Controls.Add(this.btnAddImageShape);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.txtImageShapeFile);
+            this.Controls.Add(this.btnMoveShapes);
+            this.Controls.Add(this.txtShapeIdx);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.btnShapeUp);
             this.Controls.Add(this.btnShapeRgt);
             this.Controls.Add(this.btnShapeDown);
@@ -524,7 +594,6 @@
         private System.Windows.Forms.Button btnComplete;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnTestObjMove;
-        private System.Windows.Forms.Timer tmrObjMove;
         private System.Windows.Forms.Button btnObjOrgPos;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cbShapeIndex;
@@ -532,5 +601,12 @@
         private System.Windows.Forms.Button btnShapeDown;
         private System.Windows.Forms.Button btnShapeRgt;
         private System.Windows.Forms.Button btnShapeUp;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txtShapeIdx;
+        private System.Windows.Forms.Button btnMoveShapes;
+        private System.Windows.Forms.TextBox txtImageShapeFile;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button btnAddImageShape;
     }
 }

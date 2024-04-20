@@ -20,11 +20,19 @@ namespace DrawingObject.UserDrawing
         private Pen drwPen = null;
         private Brush drwBrush = null;
         private int ptMargin = 2;
+        private string imageFile = string.Empty;
+        private Bitmap shapeImg = null;
 
         public objShape()
         {
             drwPen = new Pen(Color.Black, 1);
             drwBrush = new SolidBrush(Color.Black);
+        }
+        public objShape(int posX, int posY, string imageFile)
+        {
+            shapeType = ShapeType.Shape_Image;
+            shapeImg = new Bitmap(imageFile);
+            shapeRegion = new Rectangle(posX, posY, shapeImg.Width, shapeImg.Height);
         }
         public objShape(ShapeType shapeType, Rectangle shapeRegion, int LineThick, Color LineColor, bool bFill, Color FillColor)
         {
@@ -99,6 +107,10 @@ namespace DrawingObject.UserDrawing
                 case ShapeType.Shape_Ellipse:
                     DrawEllipse(gp, bFill);
                     break;
+
+                case ShapeType.Shape_Image:
+                    DrawImage(gp);
+                    break;
             }
         }
 
@@ -137,6 +149,13 @@ namespace DrawingObject.UserDrawing
                 gp.FillEllipse(drwBrush, shapeRegion.X, shapeRegion.Y, shapeRegion.Width, shapeRegion.Height);
             else
                 gp.DrawEllipse(drwPen, shapeRegion.X, shapeRegion.Y, shapeRegion.Width, shapeRegion.Height);
+        }
+        private void DrawImage(Graphics gp)
+        {
+            if (shapeImg == null) return;
+
+            //--
+            gp.DrawImage(shapeImg, shapeRegion);
         }
     }
 
@@ -190,6 +209,11 @@ namespace DrawingObject.UserDrawing
             {
                 return bEditMode;
             }
+        }
+        public void Add_Image_Shape(int posX, int posY, string imageFile)
+        {
+            objShape shape = new objShape(posX, posY, imageFile);
+            shapeList.Add(shape);
         }
         public void Add_Shape(ShapeType shapeType, Rectangle shapeRegion, int LineThick, Color LineColor, bool bFill, Color FillColor)
         {

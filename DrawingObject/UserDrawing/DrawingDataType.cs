@@ -9,7 +9,8 @@ namespace DrawingObject.UserDrawing
     public enum ShapeType
     {
         Shape_Rect,
-        Shape_Ellipse
+        Shape_Ellipse,
+        Shape_Image
     }
 
     public enum ShapeRegionEdit

@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,8 +26,10 @@ namespace DrawingObject.UserDrawing
         userObject sel_Object = null;
 
         //--
+        bool bThreadStart = false;
         int ObjMoveOffX = 0;
         int ObjMoveOffY = 0;
+        int[] shapesIdx;
 
         public ObjectsSetting()
         {
@@ -154,6 +157,21 @@ namespace DrawingObject.UserDrawing
             cbShapeIndex.Items.Add("Shape Idx: " + sel_Object.ShapeCount.ToString());
             cbShapeIndex.SelectedIndex = shapeIdx;
         }
+        private void btnAddImageShape_Click(object sender, EventArgs e)
+        {
+            if (objIdx < 0) return;
+            if (txtImageShapeFile.Text.Length <= 0) return;
+
+            sel_Object = objMgr.Get_User_Object(objIdx);
+            sel_Object.Add_Image_Shape(0, 0, txtImageShapeFile.Text);
+            sel_Object.Draw_Object();
+            sel_Object.Edit_Mode = true;
+
+            //--
+            shapeIdx = sel_Object.ShapeCount - 1;
+            cbShapeIndex.Items.Add("Shape Idx: " + sel_Object.ShapeCount.ToString());
+            cbShapeIndex.SelectedIndex = shapeIdx;
+        }
         private void btnDeleteShape_Click(object sender, EventArgs e)
         {
             if (objIdx < 0) return;
@@ -172,26 +190,71 @@ namespace DrawingObject.UserDrawing
         private void btnTestObjMove_Click(object sender, EventArgs e)
         {
             if (objIdx < 0) return;
-            if (tmrObjMove.Enabled == false)
-            {
-                ObjMoveOffX = 0;
-                ObjMoveOffY = 0;
-                tmrObjMove.Enabled = true;
-            }
+            if (bThreadStart == true) return;
+
+            Thread thrMoveObj = new Thread(MoveObj_Thread);
+            thrMoveObj.Start();
         }
-        private void tmrObjMove_Tick(object sender, EventArgs e)
+
+        private void btnMoveShapes_Click(object sender, EventArgs e)
         {
-            bool bStop = false;
-            if (ObjMoveOffX < 100)
-                ObjMoveOffX++;
-            else if (ObjMoveOffY < 100)
-                ObjMoveOffY++;
-            else
-                bStop = true;
+            if (objIdx < 0) return;
+            if (txtShapeIdx.Text.Length <= 0) return;
+            if (bThreadStart == true) return;
 
-            objMgr.Get_User_Object(objIdx).Move_Object(ObjMoveOffX, ObjMoveOffY);
+            string[] strShapesIdx = txtShapeIdx.Text.Split(',');
+            if (strShapesIdx.Length <= 0) return;
 
-            if (bStop) tmrObjMove.Enabled = false;
+            shapesIdx = new int[strShapesIdx.Length];
+            for (int i = 0; i < strShapesIdx.Length; i++)
+            {
+                if (Int32.TryParse(strShapesIdx[i], out shapesIdx[i]) == false) return;
+            }
+
+            //--
+            Thread thrMoveShapes = new Thread(MoveShapes_Thread);
+            thrMoveShapes.Start();
+        }
+
+        private void MoveObj_Thread()
+        {
+            bThreadStart = true;
+            ObjMoveOffX = 0;
+            ObjMoveOffY = 0;
+
+            for (ObjMoveOffX = 0; ObjMoveOffX < 200; ObjMoveOffX+=2)
+            {
+                objMgr.Get_User_Object(objIdx).Move_Object(ObjMoveOffX, ObjMoveOffY);
+                Thread.Sleep(10);
+            }
+
+            for (ObjMoveOffY = 0; ObjMoveOffY < 200; ObjMoveOffY+=2)
+            {
+                objMgr.Get_User_Object(objIdx).Move_Object(ObjMoveOffX, ObjMoveOffY);
+                Thread.Sleep(10);
+            }
+
+            bThreadStart = false;
+        }
+        private void MoveShapes_Thread()
+        {
+            bThreadStart = true;
+            ObjMoveOffX = 0;
+            ObjMoveOffY = 0;
+
+            for (ObjMoveOffY = 0; ObjMoveOffY < 300; ObjMoveOffY += 3)
+            {
+                objMgr.Get_User_Object(objIdx).Move_Shapes(shapesIdx, ObjMoveOffX, ObjMoveOffY * -1);
+                Thread.Sleep(10);
+            }
+
+            for ( ; ObjMoveOffY >= 0; ObjMoveOffY -= 3)
+            {
+                objMgr.Get_User_Object(objIdx).Move_Shapes(shapesIdx, ObjMoveOffX, ObjMoveOffY * -1);
+                Thread.Sleep(10);
+            }
+
+            bThreadStart = false;
         }
 
         private void btnObjOrgPos_Click(object sender, EventArgs e)
