@@ -1,13 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace DrawingObject.UserDrawing
 {
+    [Serializable]
+    public class objShapeData
+    {
+        public int LineThick;
+        public int LineColor;
+        public bool bFill;
+        public int FillColor;
+        public ShapeType shapeType;
+        public int shapeRegion_X;
+        public int shapeRegion_Y;
+        public int shapeRegion_Width;
+        public int shapeRegion_Height;
+        public int shapeOrgRegion_X;
+        public int shapeOrgRegion_Y;
+        public int shapeOrgRegion_Width;
+        public int shapeOrgRegion_Height;
+        public int ptMargin;
+        public string imageFile = string.Empty;
+    }
+
+    [Serializable]
     class objShape
     {
         private int LineThick;
@@ -28,10 +48,40 @@ namespace DrawingObject.UserDrawing
             drwPen = new Pen(Color.Black, 1);
             drwBrush = new SolidBrush(Color.Black);
         }
+        public objShape(objShapeData shapeData)
+        {
+            if(shapeData.shapeType == ShapeType.Shape_Image)
+            {
+                this.imageFile = shapeData.imageFile;
+                shapeType = ShapeType.Shape_Image;
+                shapeImg = new Bitmap(this.imageFile);
+
+                shapeRegion = new Rectangle(shapeData.shapeRegion_X, shapeData.shapeRegion_Y,
+                    shapeData.shapeRegion_Width, shapeData.shapeRegion_Height);
+                shapeOrgRegion = new Rectangle(shapeData.shapeOrgRegion_X, shapeData.shapeOrgRegion_Y,
+                    shapeData.shapeOrgRegion_Width, shapeData.shapeOrgRegion_Height);
+            }
+            else
+            {
+                this.LineThick = shapeData.LineThick;
+                this.LineColor = Color.FromArgb(shapeData.LineColor);
+                this.bFill = shapeData.bFill;
+                this.FillColor = Color.FromArgb(shapeData.FillColor);
+                this.shapeType = shapeData.shapeType;
+                this.drwPen = new Pen(this.LineColor, shapeData.LineThick);
+                this.drwBrush = new SolidBrush(this.FillColor);
+
+                shapeRegion = new Rectangle(shapeData.shapeRegion_X, shapeData.shapeRegion_Y,
+                    shapeData.shapeRegion_Width, shapeData.shapeRegion_Height);
+                shapeOrgRegion = new Rectangle(shapeData.shapeOrgRegion_X, shapeData.shapeOrgRegion_Y,
+                    shapeData.shapeOrgRegion_Width, shapeData.shapeOrgRegion_Height);
+            }
+        }
         public objShape(int posX, int posY, string imageFile)
         {
+            this.imageFile = imageFile;
             shapeType = ShapeType.Shape_Image;
-            shapeImg = new Bitmap(imageFile);
+            shapeImg = new Bitmap(this.imageFile);
             shapeRegion = new Rectangle(posX, posY, shapeImg.Width, shapeImg.Height);
         }
         public objShape(ShapeType shapeType, Rectangle shapeRegion, int LineThick, Color LineColor, bool bFill, Color FillColor)
@@ -45,6 +95,25 @@ namespace DrawingObject.UserDrawing
             this.shapeOrgRegion = shapeRegion;
             this.drwPen = new Pen(LineColor, LineThick);
             this.drwBrush = new SolidBrush(FillColor);
+        }
+        public void CopyToObjShapeData(ref objShapeData shapeData)
+        {
+            shapeData.LineThick = LineThick;
+            shapeData.LineColor = Convert.ToInt32(LineColor.ToArgb());
+            shapeData.bFill = bFill;
+            shapeData.FillColor = Convert.ToInt32(FillColor.ToArgb());
+            shapeData.shapeType = shapeType;
+            shapeData.shapeRegion_X = shapeRegion.X;
+            shapeData.shapeRegion_Y = shapeRegion.Y;
+            shapeData.shapeRegion_Width = shapeRegion.Width;
+            shapeData.shapeRegion_Height = shapeRegion.Height;
+            shapeData.shapeOrgRegion_X = shapeOrgRegion.X;
+            shapeData.shapeOrgRegion_Y = shapeOrgRegion.Y;
+            shapeData.shapeOrgRegion_Width = shapeOrgRegion.Width;
+            shapeData.shapeOrgRegion_Height = shapeOrgRegion.Height;
+
+            shapeData.ptMargin = ptMargin;
+            shapeData.imageFile = imageFile;
         }
         public Color ShapeColor
         {
@@ -182,6 +251,35 @@ namespace DrawingObject.UserDrawing
         //-- double buffer
         private Bitmap Buffer = null;
         private Graphics buffGp = null;
+
+        public void Save_ShapeListToFile(string shapeListPath)
+        {
+            for (int i = 0; i < shapeList.Count; i++)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(objShapeData));
+                objShapeData shapeData = new objShapeData();
+                shapeList[i].CopyToObjShapeData(ref shapeData);
+                System.IO.TextWriter writer = new StreamWriter(shapeListPath + "\\ShapeData_" + i.ToString() + ".xml");
+                serializer.Serialize(writer, shapeData);
+                writer.Close();
+            }
+        }
+        public void Load_ShapeFile_To_Object(string shapeListPath, int shapeCnt)
+        {
+            for (int i = 0; i < shapeCnt; i++)
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(objShapeData));
+                System.IO.TextReader reader = new StreamReader(shapeListPath + "\\ShapeData_" + i.ToString() + ".xml");
+
+                objShapeData shapeData = serializer.Deserialize(reader) as objShapeData;
+                objShape shape = new objShape(shapeData);
+                shapeList.Add(shape);
+
+                reader.Close();
+            }
+
+            Draw_Object(true);
+        }
 
         public void Set_DrawingPanel(Panel drwCanvas)
         {

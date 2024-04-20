@@ -177,8 +177,8 @@ namespace DrawingObject.UserDrawing
             if (objIdx < 0) return;
             if (sel_Object.ShapeCount < 0) return;
 
-            objMgr.Get_User_Object(objIdx).Delete_LastShape();
-            cbShapeIndex.Items.RemoveAt(sel_Object.ShapeCount - 1);
+            sel_Object.Delete_LastShape();
+            cbShapeIndex.Items.RemoveAt(sel_Object.ShapeCount);
         }
 
         private void btnComplete_Click(object sender, EventArgs e)
@@ -275,6 +275,23 @@ namespace DrawingObject.UserDrawing
             else if (sender == btnShapeDown) offY = 1;
 
             objMgr.Get_User_Object(objIdx).MoveShape_EditMode(shapeIdx, offX, offY);
+        }
+
+        private void btnSaveObjToFile_Click(object sender, EventArgs e)
+        {
+            if (objIdx < 0) return;
+            if (txtSaveToFilePath.Text.Length <= 0) return;
+
+            objMgr.Get_User_Object(objIdx).Save_ShapeListToFile(txtSaveToFilePath.Text);
+        }
+
+        private void btnLoadFile_Click(object sender, EventArgs e)
+        {
+            if (objIdx < 0) return;
+            if (txtShapeCnt.Text.Length <= 0) return;
+            if (txtSaveToFilePath.Text.Length <= 0) return;
+
+            objMgr.Get_User_Object(objIdx).Load_ShapeFile_To_Object(txtSaveToFilePath.Text, Convert.ToInt32(txtShapeCnt.Text));
         }
     }
 }

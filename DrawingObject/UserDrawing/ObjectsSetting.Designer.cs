@@ -69,6 +69,13 @@
             this.txtImageShapeFile = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.btnAddImageShape = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.txtSaveToFilePath = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.btnSaveObjToFile = new System.Windows.Forms.Button();
+            this.txtShapeCnt = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnLoadFile = new System.Windows.Forms.Button();
             this.grpObjectSize.SuspendLayout();
             this.grbObjectTypes.SuspendLayout();
             this.grpProperty.SuspendLayout();
@@ -500,7 +507,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(15, 561);
+            this.label10.Location = new System.Drawing.Point(15, 563);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(107, 15);
             this.label10.TabIndex = 26;
@@ -516,12 +523,83 @@
             this.btnAddImageShape.UseVisualStyleBackColor = true;
             this.btnAddImageShape.Click += new System.EventHandler(this.btnAddImageShape_Click);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(469, 621);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(65, 15);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "Save Path:";
+            // 
+            // txtSaveToFilePath
+            // 
+            this.txtSaveToFilePath.Location = new System.Drawing.Point(538, 619);
+            this.txtSaveToFilePath.Name = "txtSaveToFilePath";
+            this.txtSaveToFilePath.Size = new System.Drawing.Size(310, 21);
+            this.txtSaveToFilePath.TabIndex = 28;
+            this.txtSaveToFilePath.Text = "D:\\Source\\RnD\\Test\\Graphics\\shapeList\\Object1";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(466, 593);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(111, 15);
+            this.label12.TabIndex = 30;
+            this.label12.Text = "Save Object To File";
+            // 
+            // btnSaveObjToFile
+            // 
+            this.btnSaveObjToFile.Location = new System.Drawing.Point(538, 645);
+            this.btnSaveObjToFile.Name = "btnSaveObjToFile";
+            this.btnSaveObjToFile.Size = new System.Drawing.Size(94, 24);
+            this.btnSaveObjToFile.TabIndex = 31;
+            this.btnSaveObjToFile.Text = "Save to File";
+            this.btnSaveObjToFile.UseVisualStyleBackColor = true;
+            this.btnSaveObjToFile.Click += new System.EventHandler(this.btnSaveObjToFile_Click);
+            // 
+            // txtShapeCnt
+            // 
+            this.txtShapeCnt.Location = new System.Drawing.Point(711, 646);
+            this.txtShapeCnt.Name = "txtShapeCnt";
+            this.txtShapeCnt.Size = new System.Drawing.Size(52, 21);
+            this.txtShapeCnt.TabIndex = 32;
+            this.txtShapeCnt.Text = "3";
+            this.txtShapeCnt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(644, 649);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(62, 15);
+            this.label13.TabIndex = 33;
+            this.label13.Text = "ShapeCnt";
+            // 
+            // btnLoadFile
+            // 
+            this.btnLoadFile.Location = new System.Drawing.Point(769, 644);
+            this.btnLoadFile.Name = "btnLoadFile";
+            this.btnLoadFile.Size = new System.Drawing.Size(78, 24);
+            this.btnLoadFile.TabIndex = 34;
+            this.btnLoadFile.Text = "Load File";
+            this.btnLoadFile.UseVisualStyleBackColor = true;
+            this.btnLoadFile.Click += new System.EventHandler(this.btnLoadFile_Click);
+            // 
             // ObjectsSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(858, 678);
+            this.Controls.Add(this.btnLoadFile);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.txtShapeCnt);
+            this.Controls.Add(this.btnSaveObjToFile);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.txtSaveToFilePath);
             this.Controls.Add(this.btnAddImageShape);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.txtImageShapeFile);
@@ -608,5 +686,12 @@
         private System.Windows.Forms.TextBox txtImageShapeFile;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button btnAddImageShape;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox txtSaveToFilePath;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button btnSaveObjToFile;
+        private System.Windows.Forms.TextBox txtShapeCnt;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnLoadFile;
     }
 }
