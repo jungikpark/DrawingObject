@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
@@ -27,7 +28,6 @@ namespace DrawingObject.UserDrawing
         public string imageFile = string.Empty;
     }
 
-    [Serializable]
     class objShape
     {
         private int LineThick;
@@ -228,6 +228,97 @@ namespace DrawingObject.UserDrawing
         }
     }
 
+    //-- Animate Class
+    class animateObject
+    {
+        private userObject parentsObj = null;
+        private int[] animateIndex = null;
+        private bool bMoving = false;
+        private int posIncrement = 2;
+        private int SignX = 1;
+        private int SignY = 1;
+        private int LastPosX = 0;
+        private int LastPosY = 0;
+        private int tarOff_X = 0;
+        private int tarOff_Y = 0;
+
+        public animateObject(userObject parentsObj)
+        {
+            this.parentsObj = parentsObj;
+        }
+        public void Reg_Animate_Shapes(int[] shapesIdx, int posIncrement)
+        {
+            if (posIncrement <= 0) posIncrement = 2;
+
+            //-- Set Animate Shapes
+            this.posIncrement = posIncrement;
+            this.animateIndex = new int[shapesIdx.Length];
+            for (int i = 0; i < shapesIdx.Length; i++)
+            {
+                this.animateIndex[i] = shapesIdx[i];
+            }
+        }
+        public void Move_Shapes_Animate(int Off_X, int Off_Y)
+        {
+            SignX = 1;
+            SignY = 1;
+            tarOff_X = Off_X;
+            tarOff_Y = Off_Y;
+
+            if (LastPosX > tarOff_X) SignX = -1;
+            if (LastPosY > tarOff_Y) SignY = -1;
+            
+            //--
+            if (bMoving == false)
+            {
+                Thread aniThread = new Thread(ShapesMovingThread);
+                aniThread.Start();
+            }
+        }
+
+        private void ShapesMovingThread()
+        {
+            //--
+            bMoving = true;
+            
+            while (true)
+            {
+                //--
+                if (LastPosX == tarOff_X && LastPosY == tarOff_Y) break;
+
+                //--
+                LastPosX += (posIncrement * SignX);
+                LastPosY += (posIncrement * SignY);
+
+                //--
+                if (SignX > 0)
+                {
+                    if (LastPosX >= tarOff_X) LastPosX = tarOff_X;
+                }
+                else
+                {
+                    if (LastPosX <= tarOff_X) LastPosX = tarOff_X;
+                }
+
+                //--
+                if (SignY > 0)
+                {
+                    if (LastPosY >= tarOff_Y) LastPosY = tarOff_Y;
+                }
+                else
+                {
+                    if (LastPosY <= tarOff_Y) LastPosY = tarOff_Y;
+                }
+
+                parentsObj.Move_Shapes(animateIndex, LastPosX, LastPosY);
+                Thread.Sleep(15);//약 60frame
+            }
+            
+            //--
+            bMoving = false;
+        }
+    }
+
     /*
      * Object는 하나 또는 하나 이상의 Shape으로 구성된다.
      * Object 전체를 움직일 수도 원하는 Shape만 움직일 수도 있다.(이동시 원위치 기준 Offset으로 이동한다)
@@ -247,8 +338,12 @@ namespace DrawingObject.UserDrawing
         private Panel drwCanvas = null;
         private Graphics gp = null;
         private List<objShape> shapeList = new List<objShape>();
+        private List<animateObject> animateList = new List<animateObject>();
+
+
 
         //-- double buffer
+        private object objDrwLock = new object();
         private Bitmap Buffer = null;
         private Graphics buffGp = null;
 
@@ -308,6 +403,8 @@ namespace DrawingObject.UserDrawing
                 return bEditMode;
             }
         }
+        public int Shape_Count => shapeList.Count;
+
         public void Add_Image_Shape(int posX, int posY, string imageFile)
         {
             objShape shape = new objShape(posX, posY, imageFile);
@@ -445,18 +542,37 @@ namespace DrawingObject.UserDrawing
             //--
             if (drwCanvas == null) return;
 
-            //--
-            if (bClear) buffGp.Clear(drwCanvas.BackColor);
-
-            //--
-            foreach (var shape in shapeList)
+            lock (objDrwLock)
             {
-                shape.DrawShape(buffGp);
-            }
+                //--
+                if (bClear) buffGp.Clear(drwCanvas.BackColor);
 
-            gp.DrawImage(Buffer, 0, 0);
+                //--
+                foreach (var shape in shapeList)
+                {
+                    shape.DrawShape(buffGp);
+                }
+
+                gp.DrawImage(Buffer, 0, 0);
+            }
         }
-        
+        public void Reg_Shapes_Animate(out int aniIdx, int[] shapesIdx, int posIncrement = 5)
+        {
+            //--
+            animateObject aniObj = new animateObject(this);
+            aniObj.Reg_Animate_Shapes(shapesIdx, posIncrement);
+            animateList.Add(aniObj);
+            aniIdx = animateList.Count - 1;
+        }
+        public void Move_Shapes_Animate(int aniIdx, int Off_X, int Off_Y)
+        {
+            if (aniIdx < 0) return;
+            if (aniIdx >= animateList.Count) return;
+
+            animateList[aniIdx].Move_Shapes_Animate(Off_X, Off_Y);
+        }
+
+
         private void Draw_MoveRect(Rectangle oldRegion, Rectangle newRegion, Color lineColor)
         {
             //--
